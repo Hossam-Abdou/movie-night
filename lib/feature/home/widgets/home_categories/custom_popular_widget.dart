@@ -184,8 +184,9 @@ class CustomPopularWidget extends StatelessWidget {
                             child: InkWell(
                               onTap: () {},
                               child: Container(
-                                height: MediaQuery.of(context).size.height * 0.05,
-                                decoration: const BoxDecoration(
+                                height:MediaQuery.sizeOf(context).height * 0.041,
+                                decoration:  BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
                                   color: Colors.transparent,
                                   image: DecorationImage(
                                     image: AssetImage(

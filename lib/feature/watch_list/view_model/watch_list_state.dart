@@ -3,7 +3,7 @@ part of 'watch_list_cubit.dart';
 sealed class WatchListState {}
 
 final class WatchListInitial extends WatchListState {}
-final class newState extends WatchListState {}
+final class LoadMoviesState extends WatchListState {}
 
 
 final class GetMoviesWatchListLoadingState extends WatchListState {}

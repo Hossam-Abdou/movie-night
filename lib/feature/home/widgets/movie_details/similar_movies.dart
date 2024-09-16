@@ -67,8 +67,9 @@ class SimilarMovies extends StatelessWidget {
                                 ),
                               ),
                               child: Container(
-                                height:MediaQuery.sizeOf(context).height * 0.05,
-                                decoration: const BoxDecoration(
+                                height:MediaQuery.sizeOf(context).height * 0.041,
+                                decoration:  BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
                                   color: Colors.transparent,
                                   image: DecorationImage(
                                     image: AssetImage(

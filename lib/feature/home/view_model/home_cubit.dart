@@ -82,17 +82,17 @@ getRatedMovies(value)  {
       });
 
       if (response.statusCode == 200) {
-        print('Response: ${response.body}');
+        debugPrint('Response: ${response.body}');
         popularMoviesModel =
             PopularMoviesModel.fromJson(jsonDecode(response.body));
         emit(PopularSuccessState());
       } else {
-        print('Error: Response status ${response.statusCode}');
+        debugPrint('Error: Response status ${response.statusCode}');
         emit(PopularErrorState());
       }
     } catch (error, stacktrace) {
-      print('Error: $error');
-      print('Stacktrace: $stacktrace');
+      debugPrint('Error: $error');
+      debugPrint('Stacktrace: $stacktrace');
       emit(PopularErrorState());
     }
   }
@@ -223,7 +223,7 @@ getRatedMovies(value)  {
     emit(GetMovieDetailsLoadingState());
     Uri uri = Uri.https(
       EndPoints.baseUrl,
-      EndPoints.movieDetails + '/$id',
+      '${EndPoints.movieDetails}/$id',
       {
         'language': 'en',
       },

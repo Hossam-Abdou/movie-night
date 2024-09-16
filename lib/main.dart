@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,14 +29,15 @@ void main() async {
   // Register your adapter here
   Hive.registerAdapter(HiveWatchListAdapter());
 
-  await EasyLocalization.ensureInitialized();
+  // await EasyLocalization.ensureInitialized();
   runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      path: 'assets/locales',
-      startLocale: const Locale('en'),
-      child: const MyApp(),
-    ),
+    // EasyLocalization(
+    //   supportedLocales: const [Locale('en'), Locale('ar')],
+    //   path: 'assets/locales',
+    //   startLocale: const Locale('en'),
+    //   child:
+      const MyApp(),
+    // ),
   );
 }
 
@@ -50,7 +49,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => BottomBarCubit()),
-        BlocProvider(create: (context) => WatchListCubit()),
+        BlocProvider(create: (context) => WatchListCubit()..getRatedMovies()),
         BlocProvider(
           create: (context) => HomeCubit()
             ..getNewReleasesMovies()
@@ -63,9 +62,9 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         child: MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
+          // localizationsDelegates: context.localizationDelegates,
+          // supportedLocales: context.supportedLocales,
+          // locale: context.locale,
           theme: ThemeData(
             scaffoldBackgroundColor: AppColors.primaryColor,
             appBarTheme: const AppBarTheme(
@@ -78,7 +77,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: BottomBarScreen.routeName,
           routes: {
-            HomeScreen.routeName: (context) =>  HomeScreen(),
+            HomeScreen.routeName: (context) =>  const HomeScreen(),
             SplashScreen.routeName: (context) => const SplashScreen(),
             BottomBarScreen.routeName: (context) => const BottomBarScreen(),
             CategoryMovies.routeName: (context) => const CategoryMovies(),

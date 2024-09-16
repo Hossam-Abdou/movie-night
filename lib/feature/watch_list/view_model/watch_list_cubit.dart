@@ -37,7 +37,7 @@ class WatchListCubit extends Cubit<WatchListState> {
         await Hive.openBox<HiveWatchList>(boxName, path: appDocumentsDir.path);
 
     movies = box.values.toList();
-    emit(newState());
+    emit(LoadMoviesState());
   }
 
   Future<void> saveMovie(HiveWatchList movie) async {
@@ -58,7 +58,7 @@ class WatchListCubit extends Cubit<WatchListState> {
         await Hive.openBox<HiveWatchList>(boxName, path: appDocumentsDir.path);
 
     await box.deleteAt(index);
-    print('Movie removed at index: $index');
+    debugPrint('Movie removed at index: $index');
     loadMovies(); // Reload movies to update the list
   }
 
@@ -97,7 +97,7 @@ class WatchListCubit extends Cubit<WatchListState> {
       }
     } catch (error) {
       emit(GetMoviesWatchListErrorState());
-      // print(error.toString());
+      // debugPrint(error.toString());
     }
   }
 
@@ -140,7 +140,7 @@ class WatchListCubit extends Cubit<WatchListState> {
       }
     } catch (error) {
       emit(AddMoviesWatchListErrorState());
-      print('Error: ${error.toString()}');
+      debugPrint('Error: ${error.toString()}');
     }
   }
 
@@ -243,7 +243,7 @@ class WatchListCubit extends Cubit<WatchListState> {
       }
     } catch (error) {
       emit(AddRatedMoviesErrorState());
-      print('Error: ${error.toString()}');
+      debugPrint('Error: ${error.toString()}');
     }
   }
 
@@ -275,7 +275,7 @@ class WatchListCubit extends Cubit<WatchListState> {
           jsonDecode(response.body),
         );
         emit(DeleteRatedMoviesSuccessState());
-        await getRatedMovies(); // Refresh rated movies list
+        await getRatedMovies();
       } else {
         emit(DeleteRatedMoviesErrorState());
       }

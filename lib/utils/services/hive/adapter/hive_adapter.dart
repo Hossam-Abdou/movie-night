@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 part 'hive_adapter.g.dart';
@@ -49,9 +50,9 @@ class AddToWatchListManager {
     // Add the movie to the Hive box
     await box.add(movie);
 
-    print('Movie saved: ${movie.title}');
-    print('Movie saved: ${movie.posterPath}');
-    print('Movie saved: ${movie.id}');
+    debugPrint('Movie saved: ${movie.title}');
+    debugPrint('Movie saved: ${movie.posterPath}');
+    debugPrint('Movie saved: ${movie.id}');
   }
 
 

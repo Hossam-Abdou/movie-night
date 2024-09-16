@@ -44,7 +44,7 @@ dependencies:
   cached_network_image:
   carousel_slider:
   pod_player:
-  easy_localization:
+#  easy_localization:
   url_launcher:
   shared_preferences:
   hive:

@@ -20,16 +20,16 @@ class HomeScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                CustomPopularWidget(),
+                const CustomPopularWidget(),
                 SizedBox(
                   height: 15.h,
                 ),
 
-                NewReleaseWidget(),
+                const NewReleaseWidget(),
                 SizedBox(
                   height: 30.h,
                 ),
-                RecommendedWidget(),
+                const RecommendedWidget(),
               ],
             ),
           ),

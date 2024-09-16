@@ -1,8 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:movie_night/feature/home/view/movie_details/movie_details_screen.dart';
 import 'package:movie_night/feature/home/view_model/home_cubit.dart';
 import 'package:movie_night/utils/app_colors/app_colors.dart';
 import 'package:movie_night/utils/app_images/app_images.dart';
@@ -28,7 +28,7 @@ class RecommendedWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppStrings.recommended.tr(),
+              AppStrings.recommended,
               style: GoogleFonts.poppins(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.bold,
@@ -51,7 +51,17 @@ class RecommendedWidget extends StatelessWidget {
                        CustomWishListContainer(
                         firstImage:'${cubit.topRatedModel?.results?[index].posterPath}',
                         secondImage: AppImages.bookmark,
-                         onTap: (){},
+                         onTap: () {
+                           Navigator.pushNamed(
+                             context,
+                             MovieDetailsScreen.routeName,
+                             arguments: cubit.topRatedModel?.results?[index].id,
+                           );
+                         },
+                         iconOnTap: () {
+
+                         },
+
                                          ),
                       CustomRate(rate: cubit.topRatedModel?.results?[index].voteAverage.toString() ,) ,
                       SizedBox(

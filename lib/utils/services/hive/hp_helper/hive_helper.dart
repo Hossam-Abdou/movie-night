@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:movie_night/feature/home/model/results_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,8 +15,8 @@ class HiveHelper {
     final box = await Hive.openBox<Results>(newBox, path: appDocumentsDir.path,);
 
     await box.add(movie); // Add movie to the watchlist
-    print(movie);
-    print('hello : ');
+    debugPrint('movie added : $movie');
+    debugPrint('hello : ');
   }
 
   // Retrieve all watchlist movies

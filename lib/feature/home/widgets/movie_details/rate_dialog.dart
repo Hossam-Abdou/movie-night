@@ -10,7 +10,7 @@ class RateDialog extends StatelessWidget {
   final WatchListCubit cubit;
   final int movieId;
 
-  RateDialog({
+  const RateDialog({super.key,
     required this.cubit,
     required this.movieId,
   });

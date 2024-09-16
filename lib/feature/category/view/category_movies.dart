@@ -70,6 +70,7 @@ class CategoryMovies extends StatelessWidget {
                                       '${cubit.categoryMovieModel?.results?[index].posterPath}',
                                   secondImage: AppImages.bookmark,
                                   onTap: () {},
+                                  iconOnTap: () {  },
                                 ),
                               ),
                             ),

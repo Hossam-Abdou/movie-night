@@ -17,7 +17,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WatchListCubit()
+      create: (context) =>
+      WatchListCubit()
         ..getProfileData()
         ..getWatchList()
         ..getRatedMovies(),
@@ -37,111 +38,120 @@ class ProfileScreen extends StatelessWidget {
 
           return Padding(
             padding: EdgeInsets.all(12.r),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 45.r,
-                  backgroundImage: NetworkImage(
-                    '${Constants.imageBaseUrl}${cubit.getProfileModel?.avatar?.tmdb?.avatarPath ?? ''}',
-                  ),
-                ),
-                Text(
-                  cubit.getProfileModel?.name ?? '',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                Text(
-                  cubit.getProfileModel?.username ?? '',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                SizedBox(height: 15.h),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'My Movies',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 45.r,
+                    backgroundImage: NetworkImage(
+                      '${Constants.imageBaseUrl}${cubit.getProfileModel?.avatar
+                          ?.tmdb?.avatarPath ?? ''}',
                     ),
                   ),
-                ),
-                SizedBox(height: 20.h),
-                ListTile(
-                  onTap: () {
-                    Navigator.pushNamed(context, WatchListScreen.routeName);
-                  },
-                  shape: StadiumBorder(
-                      side: BorderSide(color: AppColors.yellowColor, width: 2.w)),
-                  title: Text(
-                    'WatchList ',
+                  Text(
+                    cubit.getProfileModel?.name ?? '',
                     style: GoogleFonts.poppins(
                       color: Colors.white,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  leading: Icon(Icons.bookmark_border_outlined, color: AppColors.yellowColor),
-                  // trailing: CircleAvatar(
-                  //   radius: 13.r,
-                  //   backgroundColor: AppColors.lightGreyColor,
-                  //   child: Text(
-                  //     cubit.watchListModel?.results?.length.toString() ?? '0',
-                  //     style: GoogleFonts.poppins(
-                  //       color: Colors.white,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
-                ),
-                SizedBox(height: 20.h),
-                ListTile(
-                  shape: StadiumBorder(
-                      side: BorderSide(color: AppColors.yellowColor, width: 2.w)),
-                  onTap: () {
-                    Navigator.pushNamed(context, RatedMoviesScreen.routeName);
-                  },
-                  title: Text(
-                    'Reviews ',
+                  Text(
+                    cubit.getProfileModel?.username ?? '',
                     style: GoogleFonts.poppins(
                       color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
-                  leading: Icon(Icons.star_rate_outlined, color: AppColors.yellowColor),
-                  // trailing: Text(
-                  //   cubit.getRatedMoviesModel?.totalResults.toString() ?? '0',
-                  //   style: GoogleFonts.poppins(
-                  //     color: Colors.white,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                ),
-                SizedBox(height: 20.h),
-                ListTile(
-                  shape: StadiumBorder(
-                      side: BorderSide(color: AppColors.yellowColor, width: 2.w)),
-                  onTap: () {
-                    Uri uri = Uri.parse('https://developer.themoviedb.org/docs/faq');
-                    launchUrl(uri);
-                  },
-                  title: Text(
-                    'About',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
+                  SizedBox(height: 15.h),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'My Movies',
+                      style: GoogleFonts.poppins(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                  leading: SvgPicture.asset(
-                    'assets/images/tdmb.svg',
-                    // color: AppColors.yellowColor,
-                    height: 20.h,
+                  SizedBox(height: 20.h),
+                  ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(context, WatchListScreen.routeName);
+                    },
+                    shape: StadiumBorder(
+                        side: BorderSide(
+                            color: AppColors.yellowColor, width: 2.w)),
+                    title: Text(
+                      'WatchList ',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                      ),
+                    ),
+                    leading: const Icon(Icons.bookmark_border_outlined,
+                      color: AppColors.yellowColor,),
+                    // trailing: CircleAvatar(
+                    //   radius: 13.r,
+                    //   backgroundColor: AppColors.lightGreyColor,
+                    //   child: Text(
+                    //     cubit.watchListModel?.results?.length.toString() ?? '0',
+                    //     style: GoogleFonts.poppins(
+                    //       color: Colors.white,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 20.h),
+                  ListTile(
+                    shape: StadiumBorder(
+                        side: BorderSide(
+                            color: AppColors.yellowColor, width: 2.w)),
+                    onTap: () {
+                      Navigator.pushNamed(context, RatedMoviesScreen.routeName);
+                    },
+                    title: Text(
+                      'Reviews ',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                      ),
+                    ),
+                    leading: const Icon(
+                        Icons.star_rate_outlined, color: AppColors.yellowColor),
+                    // trailing: Text(
+                    //   cubit.getRatedMoviesModel?.totalResults.toString() ?? '0',
+                    //   style: GoogleFonts.poppins(
+                    //     color: Colors.white,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                  ),
+                  SizedBox(height: 20.h),
+                  ListTile(
+                    shape: StadiumBorder(
+                        side: BorderSide(
+                            color: AppColors.yellowColor, width: 2.w)),
+                    onTap: () {
+                      Uri uri = Uri.parse(
+                          'https://developer.themoviedb.org/docs/faq');
+                      launchUrl(uri);
+                    },
+                    title: Text(
+                      'About',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                      ),
+                    ),
+                    leading: SvgPicture.asset(
+                      'assets/images/tdmb.svg',
+                      // color: AppColors.yellowColor,
+                      height: 20.h,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

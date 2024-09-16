@@ -81,7 +81,7 @@ class RatedMoviesScreen extends StatelessWidget {
             body: Padding(
               padding: EdgeInsets.all(12.r),
               child: ListView.separated(
-                itemCount: cubit.getRatedMoviesModel?.totalResults ?? 0,
+                itemCount: cubit.getRatedMoviesModel?.results?.length ?? 0,
                 separatorBuilder: (context, index) => SizedBox(
                   height: 15.h,
                 ),
@@ -130,7 +130,7 @@ class RatedMoviesScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${cubit.getRatedMoviesModel?.results?[index].releaseDate ?? " ".substring(0, 4)}',
+                            cubit.getRatedMoviesModel?.results?[index].releaseDate ?? " ".substring(0, 4),
                             style: GoogleFonts.poppins(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
