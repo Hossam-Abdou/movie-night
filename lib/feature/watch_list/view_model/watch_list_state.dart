@@ -4,6 +4,7 @@ sealed class WatchListState {}
 
 final class WatchListInitial extends WatchListState {}
 final class LoadMoviesState extends WatchListState {}
+final class LoadRateMoviesState extends WatchListState {}
 
 
 final class GetMoviesWatchListLoadingState extends WatchListState {}

@@ -27,7 +27,8 @@ void main() async {
   Hive.init(appDocumentsDir.path);
 
   // Register your adapter here
-  Hive.registerAdapter(HiveWatchListAdapter());
+  // Hive.registerAdapter(HiveWatchListAdapter());
+  Hive.registerAdapter(HiveRateAdapter());
 
   // await EasyLocalization.ensureInitialized();
   runApp(
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => BottomBarCubit()),
-        BlocProvider(create: (context) => WatchListCubit()..getRatedMovies()),
+        BlocProvider(create: (context) => WatchListCubit()),
         BlocProvider(
           create: (context) => HomeCubit()
             ..getNewReleasesMovies()

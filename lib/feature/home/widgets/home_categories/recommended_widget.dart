@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_night/feature/home/view/movie_details/movie_details_screen.dart';
 import 'package:movie_night/feature/home/view_model/home_cubit.dart';
+import 'package:movie_night/feature/watch_list/view_model/watch_list_cubit.dart';
 import 'package:movie_night/utils/app_colors/app_colors.dart';
-import 'package:movie_night/utils/app_images/app_images.dart';
 import 'package:movie_night/utils/app_strings/app_strings.dart';
 import 'package:movie_night/utils/components/custom_rate.dart';
 import 'package:movie_night/utils/components/custom_wish_list_container.dart';
@@ -19,6 +19,9 @@ class RecommendedWidget extends StatelessWidget {
     return  BlocBuilder<HomeCubit, HomeState>(
   builder: (context, state) {
     var  cubit = HomeCubit.get(context);
+    return BlocBuilder<WatchListCubit, WatchListState>(
+      builder: (context, state) {
+        var watchListCubit = WatchListCubit.get(context);
     return Container(
       height: MediaQuery.of(context).size.height * 0.46,
       color: AppColors.greyColor ,
@@ -44,13 +47,18 @@ class RecommendedWidget extends StatelessWidget {
 
                 itemCount: cubit.topRatedModel?.results?.length ?? 0,
                 itemBuilder: (context, index) {
-
+                  final isInWatchlist = watchListCubit
+                      .watchListModel?.results
+                      ?.any((e) => e.id == cubit.topRatedModel?.results?[index].id) ??
+                      false;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
                        CustomWishListContainer(
+                         isInWatchlist:isInWatchlist ,
                         firstImage:'${cubit.topRatedModel?.results?[index].posterPath}',
-                        secondImage: AppImages.bookmark,
+                        // secondImage: AppImages.bookmark,
                          onTap: () {
                            Navigator.pushNamed(
                              context,
@@ -59,7 +67,12 @@ class RecommendedWidget extends StatelessWidget {
                            );
                          },
                          iconOnTap: () {
-
+                           watchListCubit.addToWatchList(
+                             isWatchList:(watchListCubit.watchListModel?.results?.any((e) => e.id == cubit.topRatedModel
+                                 ?.results?[index].id) ?? false) ? false : true,
+                             id: cubit.topRatedModel
+                                 ?.results?[index].id,
+                           );
                          },
 
                                          ),
@@ -92,6 +105,8 @@ class RecommendedWidget extends StatelessWidget {
         ),
       ),
     );
+  },
+);
   },
 );
   }

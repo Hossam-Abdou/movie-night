@@ -7,7 +7,7 @@ class DeleteDialog extends StatelessWidget {
   final VoidCallback? onTap;
 
 
-DeleteDialog({super.key, required this.onTap});
+const DeleteDialog({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

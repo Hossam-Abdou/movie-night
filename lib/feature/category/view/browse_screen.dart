@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_night/feature/category/view/category_movies.dart';
 import 'package:movie_night/feature/category/view_model/category_cubit.dart';
+import 'package:movie_night/utils/app_colors/app_colors.dart';
+import 'package:movie_night/utils/constants/constants.dart';
 
 class BrowseScreen extends StatelessWidget {
   const BrowseScreen({super.key});
@@ -23,7 +25,7 @@ class BrowseScreen extends StatelessWidget {
               crossAxisSpacing: 8,
               mainAxisSpacing: 2,
             ),
-            itemBuilder: (context, index) => InkWell(
+            itemBuilder: (context, index) => GestureDetector(
               onTap: () {
                 Navigator.pushNamed(
                   context,
@@ -31,24 +33,40 @@ class BrowseScreen extends StatelessWidget {
                   arguments: cubit.moviesGenresModel?.genres?[index],
                 );
               },
-              child: Container(
+              child: Stack(
                 alignment: Alignment.center,
-                margin: EdgeInsets.all(6.r),
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      'https://img.freepik.com/premium-photo/photographer-captures-breathtaking-landscape_1275912-30798.jpg',
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.17,
+
+                      child: Image.asset(
+                        Constants.images[index],
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
-                child: Text(
-                  cubit.moviesGenresModel?.genres?[index].name ?? '',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                  ShaderMask(
+                    shaderCallback: (bounds) => RadialGradient(
+                      center: Alignment.topLeft,
+                      radius: 1,
+                      colors: <Color>[
+                        AppColors.yellowColor,
+                        AppColors.whiteColor
+                      ],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds),
+                    child: Text(
+                      cubit.moviesGenresModel?.genres?[index].name ?? '',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           );

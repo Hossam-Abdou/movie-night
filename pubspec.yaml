@@ -45,13 +45,14 @@ dependencies:
   carousel_slider:
   pod_player:
 #  easy_localization:
-  url_launcher:
+  url_launcher: ^6.3.0
   shared_preferences:
   hive:
   path_provider:
   flutter_pannable_rating_bar: ^2.7.2+1
   skeletonizer: ^1.4.2
   flutter_svg: ^2.0.10+1
+  shimmer:
 
 dev_dependencies:
   flutter_test:

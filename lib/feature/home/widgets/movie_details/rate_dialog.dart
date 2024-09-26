@@ -3,16 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:movie_night/feature/home/model/movie_details_model.dart';
 import 'package:movie_night/feature/watch_list/view_model/watch_list_cubit.dart';
 import 'package:movie_night/utils/app_colors/app_colors.dart';
+import 'package:movie_night/utils/services/hive/adapter/hive_adapter.dart';
 
 class RateDialog extends StatelessWidget {
   final WatchListCubit cubit;
-  final int movieId;
+  final MoviesDetailsModel moviesDetailsModel;
 
   const RateDialog({super.key,
     required this.cubit,
-    required this.movieId,
+    required this.moviesDetailsModel,
   });
 
   @override
@@ -45,7 +47,8 @@ class RateDialog extends StatelessWidget {
                 rate: cubit.rating,
                 items: List.generate(
                   10,
-                      (index) => const RatingWidget(
+                      (index) =>
+                  const RatingWidget(
                     selectedColor: AppColors.yellowColor,
                     unSelectedColor: Colors.grey,
                     child: Icon(
@@ -73,10 +76,17 @@ class RateDialog extends StatelessWidget {
             return Center(
               child: ElevatedButton(
                 onPressed: () {
-                  cubit.addRate(
-                    rateValue: cubit.rating,
-                    movieId: movieId,
+                  MovieRateManager().rateMovie(
+                    title:moviesDetailsModel.title,
+                    id: moviesDetailsModel.id,
+                    posterPath: moviesDetailsModel.posterPath,
+                    voteAverage: moviesDetailsModel.voteAverage,
+                    rating: cubit.rating,
                   );
+                  // cubit.addRate(
+                  //   rateValue: cubit.rating,
+                  //   movieId: movieId,
+                  // );
                   Navigator.pop(context);
                 },
                 child: Text(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:movie_night/feature/watch_list/view_model/watch_list_cubit.dart'
 import 'package:movie_night/utils/app_colors/app_colors.dart';
 import 'package:movie_night/utils/app_images/app_images.dart';
 import 'package:movie_night/utils/constants/constants.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 class NewReleaseWidget extends StatelessWidget {
@@ -63,59 +65,62 @@ class NewReleaseWidget extends StatelessWidget {
                             children: [
                               Stack(
                                 children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        MovieDetailsScreen.routeName,
-                                        arguments: movie?.id,
-                                      );
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.topLeft,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.39,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.28,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            '${Constants.imageBaseUrl}${movie?.posterPath}'
+                                  CachedNetworkImage(
+                                    imageUrl: '${Constants.imageBaseUrl}${movie?.posterPath}',
+                                    fit: BoxFit.fill,
+                                    width: MediaQuery.of(context).size.width * 0.39,
+                                    height: MediaQuery.of(context).size.height * 0.28,
+                                    placeholder: (context, url) =>Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child:  Container(
+                                        width: MediaQuery.of(context).size.width * 0.39,
+                                        height: MediaQuery.of(context).size.height * 0.28,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.r),),),
+                                    ),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    imageBuilder: (context, imageProvider) => InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          MovieDetailsScreen.routeName,
+                                          arguments: movie?.id,
+                                        );
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.topLeft,
+                                        width: MediaQuery.of(context).size.width * 0.39,
+                                        height: MediaQuery.of(context).size.height * 0.28,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10.r),
+                                          image: DecorationImage(
+                                            image: imageProvider, // Use image from CachedNetworkImage
+                                            fit: BoxFit.fill,
                                           ),
-                                          fit: BoxFit.fill,
                                         ),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          // hive add to watchlist
-                                          // final addToWatchList = HiveWatchList(
-                                          //   title: movie?.title,
-                                          //   id: movie?.id,
-                                          //   posterPath: movie?.posterPath,
-                                          //   voteAverage: movie?.voteAverage,
-                                          // );
-
-                                          // Toggle watchlist
-                                          watchListCubit.addToWatchList(
-                                            isWatchList:(watchListCubit.watchListModel?.results?.any((e) => e.id == homeCubit.newReleaseModel
-                                                ?.results?[index].id) ?? false) ? false : true,
-                                            id: homeCubit.newReleaseModel
-                                                ?.results?[index].id,
-                                          );
-
-
-                                        },
-                                        child: Image.asset(
-                                          isInWatchlist
-                                              ? AppImages.bookmark13
-                                              : AppImages.bookmark12,
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Toggle watchlist
+                                            watchListCubit.addToWatchList(
+                                              isWatchList: (watchListCubit.watchListModel?.results
+                                                  ?.any((e) => e.id == homeCubit.newReleaseModel
+                                                  ?.results?[index].id) ??
+                                                  false)
+                                                  ? false
+                                                  : true,
+                                              id: homeCubit.newReleaseModel?.results?[index].id,
+                                            );
+                                          },
+                                          child: Image.asset(
+                                            width: 24.w,
+                                            isInWatchlist ? AppImages.bookmark13 : AppImages.bookmark12,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
+
                                 ],
                               ),
 

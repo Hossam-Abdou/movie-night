@@ -4,7 +4,7 @@ import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_night/feature/home/view/movie_details/movie_details_screen.dart';
-import 'package:movie_night/feature/watch_list/delete_dialog.dart';
+import 'package:movie_night/feature/watch_list/widgets/delete_dialog.dart';
 import 'package:movie_night/feature/watch_list/view_model/watch_list_cubit.dart';
 import 'package:movie_night/utils/app_images/app_images.dart';
 import 'package:movie_night/utils/constants/constants.dart';
@@ -18,7 +18,7 @@ class RatedMoviesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WatchListCubit()..getRatedMovies(),
+      create: (context) => WatchListCubit()..loadRateMovies(),
       child: BlocBuilder<WatchListCubit, WatchListState>(
         builder: (context, state) {
           var cubit = WatchListCubit.get(context);
@@ -30,8 +30,8 @@ class RatedMoviesScreen extends StatelessWidget {
               color: AppColors.yellowColor,
             ));
           }
-          if (state is GetRatedMoviesSuccessState &&
-              cubit.getRatedMoviesModel!.results!.isEmpty) {
+          if (state is LoadRateMoviesState &&
+              cubit.moviesRate.isEmpty) {
             return Scaffold(
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -44,7 +44,7 @@ class RatedMoviesScreen extends StatelessWidget {
                     height: MediaQuery.sizeOf(context).height * 0.2,
                   ),
                   Text(
-                    'No movies Found',
+                    'No Rates Found',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       color: Colors.white.withOpacity(0.67),
@@ -52,17 +52,8 @@ class RatedMoviesScreen extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
+
                 ],
-              ),
-            );
-          }
-          if (state is GetRatedMoviesErrorState) {
-            return Scaffold(
-              body: Center(
-                child: Text(
-                  'Error loading movies:',
-                  style: GoogleFonts.inter(color: Colors.red, fontSize: 16.sp),
-                ),
               ),
             );
           }
@@ -81,19 +72,20 @@ class RatedMoviesScreen extends StatelessWidget {
             body: Padding(
               padding: EdgeInsets.all(12.r),
               child: ListView.separated(
-                itemCount: cubit.getRatedMoviesModel?.results?.length ?? 0,
+                itemCount: cubit.moviesRate.length,
                 separatorBuilder: (context, index) => SizedBox(
                   height: 15.h,
                 ),
                 itemBuilder: (context, index) => Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(
                             context, MovieDetailsScreen.routeName,
                             arguments:
-                                cubit.getRatedMoviesModel?.results?[index].id);
+                            cubit.moviesRate[index].id);
                       },
                       child: Container(
                         alignment: Alignment.topLeft,
@@ -103,7 +95,7 @@ class RatedMoviesScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.r),
                           image: DecorationImage(
                             image: NetworkImage(
-                              '${Constants.imageBaseUrl}/${cubit.getRatedMoviesModel?.results?[index].posterPath}',
+                              '${Constants.imageBaseUrl}/${cubit.moviesRate[index].posterPath}',
                             ),
                             fit: BoxFit.fill,
                           ),
@@ -121,7 +113,7 @@ class RatedMoviesScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            cubit.getRatedMoviesModel?.results?[index].title ??
+                            cubit.moviesRate[index].title ??
                                 '',
                             style: GoogleFonts.poppins(
                               fontSize: 12.sp,
@@ -129,15 +121,6 @@ class RatedMoviesScreen extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          Text(
-                            cubit.getRatedMoviesModel?.results?[index].releaseDate ?? " ".substring(0, 4),
-                            style: GoogleFonts.poppins(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          // Rating Display and Update
 
                           SizedBox(
                             height: 10.h,
@@ -159,10 +142,9 @@ class RatedMoviesScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16.r),
                                 ),
                                 child: Text(
-                                  cubit.getRatedMoviesModel?.results?[index]
+                                  cubit.moviesRate[index]
                                           .rating
-                                          .toString() ??
-                                      '',
+                                          .toString(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w700,
@@ -178,7 +160,7 @@ class RatedMoviesScreen extends StatelessWidget {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width * 0.46,
                             child: PannableRatingBar(
-                              rate: cubit.getRatedMoviesModel?.results?[index]
+                              rate: cubit.moviesRate[index]
                                       .rating ??
                                   0,
                               // This will display the current rating
@@ -203,13 +185,19 @@ class RatedMoviesScreen extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return DeleteDialog(onTap: () {
-                                      cubit.deleteRate(cubit.getRatedMoviesModel
-                                          ?.results?[index].id);
+                                      cubit.deleteRate(cubit.moviesRate[index].id!);
+                                      Navigator.of(context).pop(true);
 
-                                      Navigator.of(context).pop();
                                     });
                                   },
-                                );
+                                )
+                                //     .then((value) {
+                                //   if (value == true) {
+                                //     Navigator.pop(context,true);
+                                //
+                                //   }
+                                // })
+                                ;
                               },
                               child: Text(
                                 'Delete Rate',

@@ -11,9 +11,9 @@ import 'package:movie_night/feature/watch_list/model/watch_list_model.dart';
 import 'package:movie_night/utils/constants/constants.dart';
 import 'package:movie_night/utils/end_points/end_points.dart';
 import 'package:http/http.dart' as http;
-import 'package:movie_night/utils/services/hive/adapter/hive_adapter.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../../utils/services/hive/adapter/hive_adapter.dart';
 part 'watch_list_state.dart';
 
 class WatchListCubit extends Cubit<WatchListState> {
@@ -28,16 +28,22 @@ class WatchListCubit extends Cubit<WatchListState> {
   DeleteRateModel? deleteRateModel;
 
   List<HiveWatchList> movies = [];
+  List<HiveRate> moviesRate = [];
   String boxName = 'myBox';
+  String rateBoxName = 'ratingBox';
   double rating = 0.0;
 
   Future<void> loadMovies() async {
     final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-    var box =
-        await Hive.openBox<HiveWatchList>(boxName, path: appDocumentsDir.path);
-
+    var box = await Hive.openBox<HiveWatchList>(boxName, path: appDocumentsDir.path);
     movies = box.values.toList();
     emit(LoadMoviesState());
+  }
+  Future<void> loadRateMovies() async {
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    var boxRate = await Hive.openBox<HiveRate>(rateBoxName, path: appDocumentsDir.path);
+    moviesRate = boxRate.values.toList();
+    emit(LoadRateMoviesState());
   }
 
   Future<void> saveMovie(HiveWatchList movie) async {
@@ -54,12 +60,23 @@ class WatchListCubit extends Cubit<WatchListState> {
 
   Future<void> removeMovie(int index) async {
     final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-    var box =
-        await Hive.openBox<HiveWatchList>(boxName, path: appDocumentsDir.path);
-
+    var box = await Hive.openBox<HiveWatchList>(boxName, path: appDocumentsDir.path);
     await box.deleteAt(index);
     debugPrint('Movie removed at index: $index');
     loadMovies(); // Reload movies to update the list
+  }
+  Future<void> deleteRate(int id) async {
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    var boxRate = await Hive.openBox<HiveRate>(rateBoxName, path: appDocumentsDir.path);
+    final index = boxRate.values.toList().indexWhere((item) => item.id == id);
+    if (index != -1) {
+      await boxRate.deleteAt(index);
+      debugPrint('Movie rate removed at index: $index');
+    } else {
+      debugPrint('No movie rate found with ID: $id');
+    }
+    loadRateMovies(); // Reload rates to update the list
+    emit(DeleteRatedMoviesSuccessState()); // Emit success state
   }
 
   Future<bool> isInWatchList(int id) async {
@@ -247,43 +264,43 @@ class WatchListCubit extends Cubit<WatchListState> {
     }
   }
 
-  deleteRate(movieId) async {
-    emit(DeleteRatedMoviesLoadingState());
-    Uri uri = Uri.https(
-      EndPoints.baseUrl,
-      '${EndPoints.movieDetails}/$movieId/rating',
-      {
-        'language': 'en',
-      },
-    );
-
-    try {
-      final response = await http.delete(
-        uri,
-        headers: {
-          'Authorization': 'Bearer ${Constants.apiKey}',
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      );
-
-      debugPrint('Response status: ${response.statusCode}');
-      debugPrint('Response body: ${response.body}');
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        deleteRateModel = DeleteRateModel.fromJson(
-          jsonDecode(response.body),
-        );
-        emit(DeleteRatedMoviesSuccessState());
-        await getRatedMovies();
-      } else {
-        emit(DeleteRatedMoviesErrorState());
-      }
-    } catch (error) {
-      emit(DeleteRatedMoviesErrorState());
-      debugPrint('Error: ${error.toString()}');
-    }
-  }
+  // deleteRate(movieId) async {
+  //   emit(DeleteRatedMoviesLoadingState());
+  //   Uri uri = Uri.https(
+  //     EndPoints.baseUrl,
+  //     '${EndPoints.movieDetails}/$movieId/rating',
+  //     {
+  //       'language': 'en',
+  //     },
+  //   );
+  //
+  //   try {
+  //     final response = await http.delete(
+  //       uri,
+  //       headers: {
+  //         'Authorization': 'Bearer ${Constants.apiKey}',
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+  //
+  //     debugPrint('Response status: ${response.statusCode}');
+  //     debugPrint('Response body: ${response.body}');
+  //
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       deleteRateModel = DeleteRateModel.fromJson(
+  //         jsonDecode(response.body),
+  //       );
+  //       emit(DeleteRatedMoviesSuccessState());
+  //       await getRatedMovies();
+  //     } else {
+  //       emit(DeleteRatedMoviesErrorState());
+  //     }
+  //   } catch (error) {
+  //     emit(DeleteRatedMoviesErrorState());
+  //     debugPrint('Error: ${error.toString()}');
+  //   }
+  // }
 
 
 }

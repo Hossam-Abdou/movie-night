@@ -1,13 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_night/feature/watch_list/view/watch_list_screen.dart';
 import 'package:movie_night/feature/watch_list/view_model/watch_list_cubit.dart';
 import 'package:movie_night/utils/app_colors/app_colors.dart';
 import 'package:movie_night/utils/constants/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'rated_movies_screen.dart';
 
@@ -16,19 +17,17 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
       create: (context) =>
       WatchListCubit()
         ..getProfileData()
-        ..getWatchList()
-        ..getRatedMovies(),
+        ..getWatchList(),
       child: BlocBuilder<WatchListCubit, WatchListState>(
         builder: (context, state) {
           var cubit = WatchListCubit.get(context);
-
           if (state is GetProfileDataLoadingState ||
-              state is GetMoviesWatchListLoadingState ||
-              state is GetRatedMoviesLoadingState) {
+              state is GetMoviesWatchListLoadingState) {
             return const Center(
               child: CircularProgressIndicator(
                 color: AppColors.yellowColor,
@@ -41,13 +40,33 @@ class ProfileScreen extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 45.r,
-                    backgroundImage: NetworkImage(
-                      '${Constants.imageBaseUrl}${cubit.getProfileModel?.avatar
-                          ?.tmdb?.avatarPath ?? ''}',
+                  CachedNetworkImage(
+                    imageUrl: '${Constants.imageBaseUrl}${cubit.getProfileModel?.avatar
+                        ?.tmdb?.avatarPath }',
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child:  CircleAvatar(
+                        radius: 45.r,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      radius: 45.r,
+                      backgroundImage: NetworkImage(
+                        '${Constants.imageBaseUrl}${cubit.getProfileModel?.avatar
+                            ?.tmdb?.avatarPath ?? ''}',
+                      ),
                     ),
                   ),
+                  // CircleAvatar(
+                  //   radius: 45.r,
+                  //   backgroundImage: NetworkImage(
+                  //     '${Constants.imageBaseUrl}${cubit.getProfileModel?.avatar
+                  //         ?.tmdb?.avatarPath ?? ''}',
+                  //   ),
+                  // ),
                   Text(
                     cubit.getProfileModel?.name ?? '',
                     style: GoogleFonts.poppins(
@@ -109,11 +128,17 @@ class ProfileScreen extends StatelessWidget {
                     shape: StadiumBorder(
                         side: BorderSide(
                             color: AppColors.yellowColor, width: 2.w)),
-                    onTap: () {
-                      Navigator.pushNamed(context, RatedMoviesScreen.routeName);
+                    onTap: () async {
+                      final result = await Navigator.pushNamed(
+                        context,
+                        RatedMoviesScreen.routeName,
+                      );
+                      if (result == true) {
+                        cubit.loadRateMovies();
+                      }
                     },
                     title: Text(
-                      'Reviews ',
+                      'Rated Movies',
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                       ),
@@ -144,11 +169,12 @@ class ProfileScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    leading: SvgPicture.asset(
-                      'assets/images/tdmb.svg',
-                      // color: AppColors.yellowColor,
-                      height: 20.h,
-                    ),
+                    leading:const ImageIcon(
+                        color: AppColors.yellowColor,
+                        AssetImage(
+                      'assets/images/movies.png',
+
+                    )),
                   ),
                 ],
               ),

@@ -18,6 +18,8 @@ class MovieDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<WatchListCubit>(context).loadRateMovies();
+
     final id = ModalRoute.of(context)?.settings.arguments as dynamic;
     return BlocProvider(
       create: (context) => HomeCubit()
@@ -35,99 +37,122 @@ class MovieDetailsScreen extends StatelessWidget {
             );
           }
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                cubit.moviesDetailsModel?.title ?? '',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                ),
-              ),
-              centerTitle: true,
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const MovieBackgroundPoster(),
-                  const SizedBox(height: 18),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cubit.moviesDetailsModel?.title ?? '',
-                                    style: GoogleFonts.inter(
-                                      color: Colors.white,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Text(
-                                    cubit.moviesDetailsModel?.releaseDate ?? '',
-                                    style: GoogleFonts.inter(
-                                      color: Colors.grey,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return RateDialog(
-                                        cubit: BlocProvider.of<WatchListCubit>(context),
-                                        movieId: id,
-                                      );
-                                    });
-                              },
-                              child: Text(
-                                'Rate Now',
-                                style: TextStyle(
-                                  color: AppColors.yellowColor,
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const MoviePoster(),
-                            SizedBox(width: 10.w),
-                            const GenresGridView(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        SimilarMovies(
-                          id: id,
-                        ),
-                      ],
+          return BlocBuilder<WatchListCubit, WatchListState>(
+            builder: (context, state) {
+              var watchListCubit = WatchListCubit.get(context);
+
+              bool isRated =
+                  watchListCubit.moviesRate.any((movie) => movie.id == id);
+
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    cubit.moviesDetailsModel?.title ?? '',
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
                     ),
                   ),
-                ],
-              ),
-            ),
+                  centerTitle: true,
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const MovieBackgroundPoster(),
+                      const SizedBox(height: 18),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cubit.moviesDetailsModel?.title ?? '',
+                                        style: GoogleFonts.inter(
+                                          color: Colors.white,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      Text(
+                                        cubit.moviesDetailsModel?.releaseDate ??
+                                            '',
+                                        style: GoogleFonts.inter(
+                                          color: Colors.grey,
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                isRated
+                                    ? Text(
+                                        'Rated',
+                                        // Modify according to your data structure
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : TextButton(
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return RateDialog(
+                                                  cubit: BlocProvider.of<
+                                                      WatchListCubit>(context),
+                                                  moviesDetailsModel:
+                                                      cubit.moviesDetailsModel!,
+                                                );
+                                              });
+                                        },
+                                        child: Text(
+                                          'Rate Now',
+                                          style: TextStyle(
+                                            color: AppColors.yellowColor,
+                                            fontSize: 13.sp,
+                                          ),
+                                        ),
+                                      ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const MoviePoster(),
+                                SizedBox(width: 10.w),
+                                const GenresGridView(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            SimilarMovies(
+                              id: id,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         },
       ),

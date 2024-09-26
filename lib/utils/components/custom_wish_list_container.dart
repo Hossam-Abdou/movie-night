@@ -1,22 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_night/utils/app_images/app_images.dart';
 import 'package:movie_night/utils/constants/constants.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CustomWishListContainer extends StatelessWidget {
   final String? firstImage;
-  final String? secondImage;
+  // final String? secondImage;
   final double imageHeight;
   final double imageWidth;
-  final IconData icon;
+  final bool isInWatchlist;
+  // final IconData icon;
   final Function()? iconOnTap;
   final Function()? onTap;
 
   const CustomWishListContainer({super.key,
     this.firstImage,
-    this.secondImage,
+    required this.isInWatchlist,
+    // this.secondImage,
     this.imageHeight=0.23,
     this.imageWidth=0.34,
-    this.icon=Icons.add,
+    // this.icon=Icons.add,
     required this.iconOnTap,
     required this.onTap
 
@@ -26,41 +31,67 @@ class CustomWishListContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        InkWell(
-          onTap: onTap,
-          child: Container(
+        CachedNetworkImage(
+          imageUrl: '${Constants.imageBaseUrl}$firstImage',
+          fit: BoxFit.fill,
+          placeholder: (context, url) =>Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child:  Container(
+              width: MediaQuery.of(context).size.width * imageWidth,
+              height: MediaQuery.of(context).size.height * imageHeight,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),),),
+          ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          imageBuilder: (context, imageProvider) => InkWell(
+            onTap:onTap,
+            child: Container(
               alignment: Alignment.topLeft,
               width: MediaQuery.of(context).size.width * imageWidth,
               height: MediaQuery.of(context).size.height * imageHeight,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
                 image: DecorationImage(
-                  image: NetworkImage(
-                    '${Constants.imageBaseUrl}$firstImage',
-                  ),
+                  image: imageProvider, // Use image from CachedNetworkImage
                   fit: BoxFit.fill,
                 ),
               ),
               child: InkWell(
-                onTap: iconOnTap,
-                child: Container(
-                  height:MediaQuery.sizeOf(context).height * 0.041,
-                  decoration:  BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.r),
-                    color: Colors.transparent,
-                    image: DecorationImage(
-                      image: AssetImage(
-                        '$secondImage',
-                      ),
-                    ),
-                  ),
-                  child:  Icon(
-                    icon,
-                    color: Colors.white,
-                  ),
+                onTap:iconOnTap,
+                child: Image.asset(
+                  width: 24.w,
+                  isInWatchlist ? AppImages.bookmark13 : AppImages.bookmark12,
                 ),
-              )),
+              ),
+            ),
+          ),
         ),
+        // InkWell(
+        //   onTap: onTap,
+        //   child: Container(
+        //       alignment: Alignment.topLeft,
+        //       width: MediaQuery.of(context).size.width * imageWidth,
+        //       height: MediaQuery.of(context).size.height * imageHeight,
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(10.r),
+        //         image: DecorationImage(
+        //           image: NetworkImage(
+        //             '${Constants.imageBaseUrl}$firstImage',
+        //           ),
+        //           fit: BoxFit.fill,
+        //         ),
+        //       ),
+        //       child: InkWell(
+        //         onTap: iconOnTap,
+        //         child: Image.asset(
+        //           width: 24.w,
+        //           isInWatchlist
+        //               ? AppImages.bookmark13
+        //               : AppImages.bookmark12,
+        //         ),
+        //       )),
+        // ),
       ],
     );
   }
