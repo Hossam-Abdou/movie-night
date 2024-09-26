@@ -22,15 +22,12 @@ Welcome to the **Movie Night** project! This is a Flutter application that allow
 ### Genre Screen
 ![Genre Screen](screenshots/genre_screen.png)
 
-### Profile Screen
-![Profile Screen](screenshots/profile_screen.png)
-
 ## Technologies Used
 
 - **Flutter:** UI toolkit for building natively compiled applications.
 - **Dart:** Programming language used for Flutter development.
-- **API Integration:** Utilizing movie databases to fetch movie data.
-- **State Management:** Implementing state management solutions (e.g., Provider, Bloc).
+- **API Integration:** Using Http.
+- **State Management:** Implementing state management Using Cubit.
 
 ## Installation
 
