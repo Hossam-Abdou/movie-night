@@ -1,16 +1,38 @@
-# movie_night
+# Movie Night
 
-A new Flutter project.
+Welcome to the **Movie Night** project! This is a Flutter application that allows users to explore and discover movies. Users can view movie details, browse different genres, and enjoy a seamless user experience.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Browse Movies:** Explore a wide range of movies with detailed information.
+- **Search Functionality:** Quickly find movies using the search feature.
+- **User-Friendly Interface:** A clean and intuitive design that enhances the user experience.
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshots
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Home Screen
+![Home Screen](screenshots/home_screen.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Movie Details Screen
+![Movie Details Screen](screenshots/movie_details_screen.png)
+
+### Search Screen
+![Search Screen](screenshots/search_screen.png)
+
+### Genre Screen
+![Genre Screen](screenshots/genre_screen.png)
+
+## Technologies Used
+
+- **Flutter:** UI toolkit for building natively compiled applications.
+- **Dart:** Programming language used for Flutter development.
+- **API Integration:** Utilizing movie databases to fetch movie data.
+- **State Management:** Implementing state management solutions (e.g., Provider, Bloc).
+
+## Installation
+
+To get started with the Movie Night app, follow these steps:
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/Hossam-Abdou/movie-night.git
