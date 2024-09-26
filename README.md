@@ -22,6 +22,9 @@ Welcome to the **Movie Night** project! This is a Flutter application that allow
 ### Genre Screen
 ![Genre Screen](screenshots/genre_screen.png)
 
+### Profile Screen
+![Profile Screen](screenshots/profile_screen.png)
+
 ## Technologies Used
 
 - **Flutter:** UI toolkit for building natively compiled applications.
