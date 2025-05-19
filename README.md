@@ -10,7 +10,15 @@ Welcome to the **Movie Night** project! This is a Flutter application that allow
 
 ## Screenshots
 
+### Home Screen
+![Home Screen](screenshots/home_screen.png)
 
+### Movie Details Screen
+![Movie Details Screen](screenshots/movie_details_screen.png)
+
+
+### Genre Screen
+![Genre Screen](screenshots/genre_screen.png)
 
 ## Technologies Used
 
